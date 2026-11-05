@@ -13,6 +13,9 @@ end
 function WaterableGrass:onLoad()
     super.onLoad(self)
     self:setFlag("bloom_state", self:getFlag("bloom_state", 1))
+    if (self.properties["bloom_state"] ~= nil) then
+        self:setFlag("bloom_state", self.properties["bloom_state"])
+    end
     self.solid = self:getFlag("bloom_state") == 1
     self.layer = self.layer - 0.1
 end
