@@ -44,7 +44,7 @@ Grows when watered.
 | `bloom_state` | `int` | `1` | `1, 2, 3` | `The current growth state.` |
 
 ### [WaterableGrass](scripts/objects/events/waterable/WaterableGrass.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/WaterableGrass.png)
 
 Grows when watered, is solid when not grown.
 
@@ -53,7 +53,7 @@ Grows when watered, is solid when not grown.
 | `color` | `string` | `"pink"` | `"pink", "dark", "darker` | `The grass color.` |
 
 ### [WaterableReeds](scripts/objects/events/waterable/WaterableReeds.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/WaterableReeds.png)
 
 Grows when watered.
 
@@ -84,7 +84,7 @@ Spawns a scissor with the generator's properties as it's own properties every se
 Removes any scissors that enter.
 
 ### [VineCuttable](scripts/objects/events/VineCuttable.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/VineCuttable.png)
 
 Can be climbed on when grown.
 
@@ -92,66 +92,64 @@ Automatically regrows after being cut.
 
 | Property | Type | Default | Values | Description |
 |-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
+| `bloom_state` | `int` | `1` | `1, 2, 3` | `The current growth state.` |
+| `sprite_column` | `int` | `6` | `any frame (check (frames)[https://github.com/AstralButOnGitHub/Chapter-5-Lib/tree/main/assets/sprites/world/events/vines_cuttable])` | `The starting frame (I think?? idk I ported this a month ago).` |
 
 ### [KnockoffBar](scripts/objects/events/KnockoffBar.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/KnockoffBar.png)
 
 Knocks Mushrooms and Watering cans off kris' head when walked under.
 
 | Property | Type | Default | Values | Description |
 |-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
+| `pedestal` | `event/marker` | `nil` | `any WateringPedestal/marker` | `When it's a pedestal; Watering cans attach to it, otherwise they move to the marker and sit there until eaten by netskie.` |
 
 ### [MushroomStool](scripts/objects/events/MushroomStool.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/MushroomStool.png)
 
 Gives mushrooms that stack on top of kris's head
 
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
 ### [NetskieObject](scripts/objects/events/NetskieObject.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/NetskieObject.png)
 
 Netskies disguised as random objects. (will eat nearby mushrooms)
 
 | Property | Type | Default | Values | Description |
 |-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
+| `style` | `string` | `"rock"` | `"rock", "block", "sign", "treasure_chest", "floradin_bush` | `The disguise.` |
+| `solid` | `boolean` | `false` | `true, false` | `Should be solid when disguised.` |
+| `text` | `tiled text` | `nil` | `any` | `Shown text.` |
+| `cutscene` | `string` | `nil` | `any` | `Plays this cutscene when interacted.` |
 
 ### [PeachGenerator](scripts/objects/events/generators/PeachGenerator.lua)
 
-Spawns a peach every second.
+Spawns a peach every (speed) seconds.
 
 | Property | Type | Default | Values | Description |
 |-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
+| `speed` | `float` | `4` | `any` | `The speed (in seconds).` |
+| `spike_rate` | `int` | `4` | `any` | `Every X peaches will be spiky.` |
 
 ### [PeachRemoveZone](scripts/objects/events/generators/PeachRemoveZone.lua)
 
 Removes any peaches that enter.
 
 ### [ToriiGate](scripts/objects/events/ToriiGate.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/ToriiGate.png)
 
 Party members start dashing upon entering.
 
 | Property | Type | Default | Values | Description |
 |-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
+| `dark` | `boolean` | `true` | `true, false` | `REPLACE.` |
+| `runspeed` | `int` | `20` | `any` | `REPLACE.` |
 
 ### [MudZone](scripts/objects/events/MudZone.lua)
 
 Spawns water particles when stepped on while dashing.
 
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
 ### [FusumaDoor](scripts/objects/events/FusumaDoor.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/FusumaDoor.png)
 
 Can slide open and closed.
 
@@ -159,10 +157,60 @@ Can also be locked with flags
 
 | Property | Type | Default | Values | Description |
 |-|-|-|-|-|
+| `can_open` | `boolean` | `true` | `true, false` | `Adds a lock if false.` |
+| `fox_flag` | `string` | `nil` | `any flag` | `Adds the fox sign and needs this flag to be at 5.` |
+| `variant` | `string` | `1` | `any` | `Unused texture variations.` |
+| `size` | `string` | `"small"` | `"small", "big"` | `Small or big door.` |
+| `text` | `tiled text` | `nil` | `any` | `Shown text.` |
+
+### [SlidingTerakota](scripts/objects/events/SlidingTerakota.lua)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/SlidingTerakota.png)
+
+Statues of Terakota that can be moved in any direction.
+
+Will fall when entering an ObjectFallArea
+
+### [ObjectFallArea](scripts/objects/events/generators/ObjectFallArea.lua)
+
+Makes certain objects "fall" when entered.
+
+(SlidingTerakota, NetskieObject, PhysicsMushroom, BunnyPlant)
+
+### [AquaKnife](scripts/objects/events/AquaKnife.lua)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/AquaKnife.png)
+
+Spinning Knife that hurts when touched. 
+
+| Property | Type | Default | Values | Description |
+|-|-|-|-|-|
+| `amplitude` | `float` | `80` | `any` | `Movement sin amplitude.` |
+| `offset` | `float` | `0` | `any` | `Movement offset.` |
+
+### [BunnyPlant](scripts/objects/events/BunnyPlant.lua)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/BunnyPlant.png)
+
+bnnuy
+
+| Property | Type | Default | Values | Description |
+|-|-|-|-|-|
+| `bunny` | `boolean` | `false` | `true, false` | `Is a bunny.` |
+
+### [PuzzleBell](scripts/objects/events/PuzzleBell.lua)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/PuzzleBell.png)
+
+does stuff
+
+| Property | Type | Default | Values | Description |
+|-|-|-|-|-|
 | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
 
+### [LeafPile](scripts/objects/events/LeafPile.lua)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/LeafPile.png)
+
+Can be scattered when dashing. 
+
 ### [FusumaWall](scripts/objects/events/FusumaWall.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/FusumaWall.png)
 
 Shows the shadow of Characters and certain Events when behind.
 
@@ -174,62 +222,8 @@ Shows the shadow of Characters and certain Events when behind.
 | `hidden` | `boolean` | `false` | `true, false` | `Only renders the shadows.` |
 | `color` | `Color` | `"83503a"` | `any` | `The shadow color.` |
 
-### [SlidingTerakota](scripts/objects/events/SlidingTerakota.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
-
-Statues of Terakota that can be moved in any direction.
-
-Will fall when entering an ObjectFallArea
-
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
-### [ObjectFallArea](scripts/objects/events/generators/ObjectFallArea.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
-
-Makes certain objects "fall" when entered.
-
-(SlidingTerakota, NetskieObject, PhysicsMushroom, BunnyPlant)
-
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
-### [AquaKnife](scripts/objects/events/AquaKnife.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
-
-Spinning Knife that hurts when touched. 
-
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
-### [BunnyPlant](scripts/objects/events/BunnyPlant.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
-
-bnnuy
-
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
-### [PuzzleBell](scripts/objects/events/PuzzleBell.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
-
-does stuff
-
-| Property | Type | Default | Values | Description |
-|-|-|-|-|-|
-| `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE` | `REPLACE.` |
-
-### [LeafPile](scripts/objects/events/LeafPile.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
-
-Can be scattered when dashing. 
-
 ### [TallGrass](scripts/objects/events/TallGrass.lua)
-![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/REPLACE.png)
+![alt text](https://github.com/AstralButOnGitHub/Chapter-5-Lib/blob/main/README-Images/TallGrass.png)
 
 Can be pushed by Characters and "Harvested" when dashing.
 
