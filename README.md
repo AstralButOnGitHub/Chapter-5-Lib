@@ -4,17 +4,17 @@ A Kristal library that adds a bunch of mechanics from Deltarune Chapter 5
 
 ## Features:
 
-- Watering (Can, Flowers, Scissors, etc)
-- Mushrooms and Netskies
-- Falling Peaches/Rocks
-- Cutable Vines
-- Torii Gates (Dashing) ((***WIP***))
-- Tall Grass
-- Petal Mounds
-- Sliding Terakotas
-- Fusuma Walls/Doors
+- Watering ([Can](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#wateringpedestal), [Flowers](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#waterableflower), [Scissors](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#wanderingscissors), etc)
+- [Mushrooms](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#mushroomstool) and [Netskies](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#netskieobject)
+- [Falling Peaches/Rocks](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#peachgenerator)
+- [Cutable Vines](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#vinecuttable)
+- [Torii Gates](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#toriigate) (Dashing) ((***WIP***))
+- [Tall Grass](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#tallgrass)
+- [Petal Mounds](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#leafpile)
+- [Sliding Terakotas](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#slidingterakota)
+- Fusuma [Walls](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#fusumawall)/[Doors](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#fusumadoor)
 - Flowery Dollars and Pink Coins (Chests)
-- Rabbit Plants
+- [Rabbit Plants](https://github.com/AstralButOnGitHub/Chapter-5-Lib/wiki/Events#bunnyplant)
 
 ---
 
