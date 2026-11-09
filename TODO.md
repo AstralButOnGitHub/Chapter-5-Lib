@@ -50,6 +50,7 @@ I've been working on making it more accurate but it's a fairly complicated thing
 - [X] Flowery Dollars, Pink Coins, and TreasureChest support.
 - [x] Aqua knife WorldBullet
 - [x] Sliding Terakota
+- [ ] ⏳ Justice Act
 ---
 ## Later
 - [ ] ⏳ Zen Sand (Technically exists but needs a lot of work)
@@ -58,7 +59,6 @@ I've been working on making it more accurate but it's a fairly complicated thing
 - [ ] Soda Dispenser and Diner menus (maybe??)
 - [ ] Allow replacing "Simply VFX" button
 - [ ] Cafe Breaks ("MewBoss" made a library but lost the files before they uploaded it 😔)
-- [ ] Justice Act
 ---
 ## Not Planned
 * Whirlwind Transition **(There's like 12 objects for the wind and leaves.)**
