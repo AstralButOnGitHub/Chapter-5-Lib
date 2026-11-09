@@ -111,6 +111,7 @@ function ToriiDashState:onUpdate()
                     self:start_running(self.player, (self.dash_dir == "left" and -1 or 1), COLORS.fuchsia, false)
                     self:start_running(self.player, (self.dash_dir == "left" and -1 or 1), COLORS.lime, false)
                     self.player:play(3/30, true)
+                    self.substate = "TORII_DASH"
                 end)
             end)
             for _, chara in pairs(Game.world.followers) do
@@ -138,7 +139,6 @@ function ToriiDashState:onUpdate()
                     Game.world.timer:after(0.3, function()
                         chara:setSprite("plat_run")
                         chara:play(3/30, true)
-                        self.substate = "TORII_DASH"
                     end)
                 end)
             end
