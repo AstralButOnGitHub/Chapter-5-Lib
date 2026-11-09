@@ -15,7 +15,7 @@ function Dummy:init()
     self.spare_points = 20
 
     self.dialogue = {
-        "..."
+        "It's me, Yellow Deltarune!\nCan't you tell?"
     }
 
     self.check = "AT 4 DF 0\n* Cotton heart and button eye\n* Looks just like a fluffy guy."
@@ -66,8 +66,35 @@ function Dummy:init()
         }
     }
     Chapter5Lib.trial_perps = {
-        "Aqua", "Seth", "Green", "Yellow", "Blue"
+        {
+            actor = Game.battle:addChild(Character("starwalker", -1000, -1000)),
+            hover_messages = {
+                "Hee hee!\nI did it!\nI did it!",
+                "Hee hee!\nBurn, burn!",
+                "It was me!! I killed\nthe handkerchiefs\nwith blood!!",
+                "Hee hee, I couldn't\nfind them. Too bad."
+            }
+        },
+        {
+            actor = Game.battle:addChild(Character("noelle", -1000, -1000)),
+            hover_messages = {
+                "Me?![wait:2] I was just...[wait:2]\nreading a book! Ha!",
+                "I was reading a\nbook by lamplight!",
+                "Is there\nanyone besides\nSTARWALKER?",
+                "Gee, I wonder\nwho it is."
+            }
+        },
+        {
+            name = "Green", hover_message = "Hee hee!\nI did it!\nI did it!"
+        },
+        {
+            name = "Aqua", hover_message = "Hee hee!\nI did it!\nI did it!"
+        },
+        {
+            name = "Blue", hover_message = "Hee hee!\nI did it!\nI did it!"
+        },
     }
+    Chapter5Lib.trial_count = 0
     self.podiums = {}
 
     self:registerAct("Justice", "Begin\nthe trial.", {"kris", "susie", "ralsei"}, 40)
@@ -89,18 +116,28 @@ function Dummy:startJustice()
         chara:addChild(podium)
         table.insert(self.podiums, podium)
     end
+    Chapter5Lib.trial_count = Chapter5Lib.trial_count + 1
+
     Game.battle:battleText("* You began the trial!", function()
-        self:createBubble("State yer case, victum!", self.x - 25, self.y - 50, "right", function()
-            
-            self:createBubble("I was crushed flat[wait:3]\nwithout permission.", self.x - 50, self.y + 25, "right", function()
-                self:createBubble("It's cool though.", self.x - 50, self.y + 25, "right", function()
-                    self:createBubble("COOL AND ILLEGAL!!![wait:3]\nWhat criminells could\ndo such a crime!![wait:1]\nFind 'em!!", self.x - 25, self.y - 50, "right", function()
-                        Chapter5Lib.case_desc = "Case 1: A Floradinn was\ncrushed flat!"
-                        self:startChoosing()
+        if Chapter5Lib.trial_count == 1 then
+            local victum = Game.battle:addChild(Character("starwalker", self.x - 50, self.y + 50))
+            self:createBubble("State yer case, victum!", self.x - 25, self.y - 50, "right", function()
+
+                self:createBubble("I was crushed flat[wait:3]\nwithout permission.", self.x - 75, self.y + 25, "right", function()
+                    self:createBubble("It's cool though.", self.x - 75, self.y + 25, "right", function()
+                        self:createBubble("COOL AND ILLEGAL!!![wait:3]\nWhat criminells could\ndo such a crime!![wait:1]\nFind 'em!!", self.x - 25, self.y - 50, "right", function()
+                            Chapter5Lib.case_desc = "Case 1: A Floradinn was\ncrushed flat!"
+                            self:startChoosing()
+                            victum:remove()
+                        end)
                     end)
                 end)
             end)
-        end)
+        elseif Chapter5Lib.trial_count == 2 then
+
+        elseif Chapter5Lib.trial_count == 3 then
+
+        end
 
         return true
     end)
@@ -124,15 +161,21 @@ end
 
 function Dummy:startChoosing()
     -- choosy choosy
-    -- for _, p in ipairs(self.podiums) do
-    --     p:remove()
-    -- end
     Chapter5Lib.selection = 1
     Chapter5Lib.selection_max = #Chapter5Lib.trial_perps
-    Game.battle.state_reason = "JUSTICEACCUSE"
-    Game.battle.timer:after(2, function()
-        Game.battle.state_reason = "JUSTICEEVIDENCE"
-    end)
+    for _, p in ipairs(Chapter5Lib.trial_perps) do
+        if p.actor ~= nil then
+            p.actor:setPosition(-1000, -1000)
+        end
+    end
+    Game.battle:setSubState("JUSTICEACCUSE")
+end
+
+function Dummy:getEnemyDialogue()
+    for _, p in ipairs(self.podiums) do
+        p:remove()
+    end
+    return super.getEnemyDialogue(self)
 end
 
 function Dummy:onAct(battler, name)

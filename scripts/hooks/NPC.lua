@@ -3,6 +3,7 @@ local NPC, super = HookSystem.hookScript(NPC)
 function NPC:init(actor, x, y, properties)
     super.init(self, actor, x, y, properties)
 
+    properties = properties or {}
     self.watered = false
     self.can_water = properties["can_water"]
     if self.can_water == nil then

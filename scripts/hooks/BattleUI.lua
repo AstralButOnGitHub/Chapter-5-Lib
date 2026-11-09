@@ -13,7 +13,7 @@ function BattleUI:draw()
         -- draw_sprite_ext(spr_yellow_evidence, 0, cam_mid + (85 * diff), cam_height + (sin((global.time * 0.1) + a) * 2) + offset, (diff == 0) ? 2 : 1.5, (diff == 0) ? 2 : 1.5, 45, (diff == 0) ? #D6FEFE : c_gray, 1)
         -- draw_sprite_ext(spr_yellow_evidence, array_get(ds_list_find_value(evidence_list, a), 3), cam_mid + (85 * diff), cam_height + (sin((global.time * 0.1) + a) * 2) + offset, 2, 2, 0, c_white, 1)
     end
-    if Game.battle.state == "BATTLETEXT" and Game.battle.state_reason == "JUSTICEACCUSE" or Game.battle.state_reason == "JUSTICEEVIDENCE" then
+    if Game.battle.state == "BATTLETEXT" and (Game.battle.substate == "JUSTICEACCUSE" or Game.battle.substate == "JUSTICEEVIDENCE") then
         love.graphics.setColor(0, 0, 0, 0.75)
         love.graphics.push()
         love.graphics.translate(-self.x, -self.y)
@@ -22,7 +22,7 @@ function BattleUI:draw()
 
         love.graphics.setFont(Assets.getFont("main"))
         love.graphics.setColor(COLORS.white)
-        if Game.battle.state_reason == "JUSTICEACCUSE" then
+        if Game.battle.substate == "JUSTICEACCUSE" then
             love.graphics.print(Chapter5Lib.case_desc, 30, 51)
             love.graphics.setColor(ColorUtils.hexToRGB("9a7ed3"))
             for a = 0, 8 do
@@ -31,7 +31,7 @@ function BattleUI:draw()
                     love.graphics.line(380, 51 + 10 * a, 380, 61 + 10 * a)
                 end
             end
-        elseif Game.battle.state_reason == "JUSTICEEVIDENCE" then
+        elseif Game.battle.substate == "JUSTICEEVIDENCE" then
             love.graphics.print(Chapter5Lib.trial_evidence[1].description, 30, 51)
             love.graphics.setColor(ColorUtils.hexToRGB("9a7ed3"))
             for a = 0, 8 do
@@ -42,16 +42,17 @@ function BattleUI:draw()
                 end
             end
             love.graphics.setColor(COLORS.white)
-            love.graphics.print(tostring(Chapter5Lib.selection), 300, -200)
             Draw.draw(Assets.getTexture("ui/battle/evidence/border"), 570, 85, 0, 2, 2)
             Draw.draw(Assets.getTexture("ui/battle/evidence/evidence_"..string.lower(Chapter5Lib.trial_evidence[1].name)), 570, 85, 0, 2, 2)
         end
+        love.graphics.setColor(COLORS.white)
+        love.graphics.print(tostring(Chapter5Lib.selection), 300, -200)
     end
 end
 
 function BattleUI:update()
     super.update(self)
-    if Game.battle.state == "BATTLETEXT" and Game.battle.state_reason == "JUSTICEACCUSE" or Game.battle.state_reason == "JUSTICEEVIDENCE" then
+    if Game.battle.state == "BATTLETEXT" and (Game.battle.substate == "JUSTICEACCUSE" or Game.battle.substate == "JUSTICEEVIDENCE") then
         local pre = Chapter5Lib.selection
 
         if (Input.keyPressed("left", true)) then
@@ -59,6 +60,23 @@ function BattleUI:update()
         end
         if (Input.keyPressed("right", true)) then
             pre = Chapter5Lib.selection + 1
+        end
+        if (Input.keyPressed("z", false)) then
+            if Game.battle.substate == "JUSTICEEVIDENCE" then
+                -- truth is revealed
+                Game.battle:finishAction()
+                Game.battle:setState("ENEMYDIALOGUE")
+            end
+            if Game.battle.substate == "JUSTICEACCUSE" then
+                Game.battle:setSubState("JUSTICEEVIDENCE")
+                Chapter5Lib.selection = 1
+            end
+        end
+        if (Input.keyPressed("x", false)) then
+            if Game.battle.substate == "JUSTICEEVIDENCE" then
+                Game.battle:setSubState("JUSTICEACCUSE")
+                Chapter5Lib.selection = 1
+            end
         end
 
         if pre < 1 then
