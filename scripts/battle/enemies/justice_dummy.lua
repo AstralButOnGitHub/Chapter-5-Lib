@@ -27,7 +27,9 @@ function Dummy:init()
     }
     self.low_health_text = "* The dummy looks like it's\nabout to fall over."
 
-    Chapter5Lib.trial_evidence = {
+    self.trial = Game.battle:addChild(TrialController(self))
+
+    self.trial.trial_evidence = {
         {
             name = "PerpBook",
             description = "A purple book\nwith a decidedly\nfloral scent."
@@ -65,122 +67,191 @@ function Dummy:init()
             description = "It's evidence. You'll know\nwhat it was evidence\nfor when it happens."
         }
     }
-    Chapter5Lib.trial_perps = {
+    self.trial.trial_perps = {
         {
-            actor = Game.battle:addChild(Character("starwalker", -1000, -1000)),
+            actor = Game.battle:addChild(Character("aqua", -1000, -1000)),
             hover_messages = {
                 "Hee hee!\nI did it!\nI did it!",
                 "Hee hee!\nBurn, burn!",
                 "It was me!! I killed\nthe handkerchiefs\nwith blood!!",
                 "Hee hee, I couldn't\nfind them. Too bad."
-            }
+            },
+            testimony_y = 0
         },
         {
-            actor = Game.battle:addChild(Character("noelle", -1000, -1000)),
+            actor = Game.battle:addChild(Character("seth", -1000, -1000)),
             hover_messages = {
                 "Me?![wait:2] I was just...[wait:2]\nreading a book! Ha!",
                 "I was reading a\nbook by lamplight!",
                 "Is there\nanyone besides\nSTARWALKER?",
                 "Gee, I wonder\nwho it is."
-            }
+            },
+            testimony_y = 0
         },
         {
-            name = "Green", hover_message = "Hee hee!\nI did it!\nI did it!"
+            actor = Game.battle:addChild(Character("green", -1000, -1000)),
+            hover_messages = {
+                "",
+                "",
+                "",
+                ""
+            },
+            testimony_y = 0
         },
         {
-            name = "Aqua", hover_message = "Hee hee!\nI did it!\nI did it!"
+            actor = Game.battle:addChild(Character("yellow", -1000, -1000)),
+            hover_messages = {
+                "Ain't nothing under\nmy boot.",
+                "Who's the liar!?",
+                "Very dangerous.",
+                "Admint it, you three!\nYou took them!!\nI know it!!"
+            },
+            testimony_y = 0
         },
         {
-            name = "Blue", hover_message = "Hee hee!\nI did it!\nI did it!"
+            actor = Game.battle:addChild(Character("blue", -1000, -1000)),
+            hover_messages = {
+                "Perhaps it was\nto preserve it?",
+                "Was it on purpose?",
+                "Was there another\nreason for it?",
+                "..."
+            },
+            testimony_y = 0
         },
     }
-    Chapter5Lib.trial_count = 0
-    self.podiums = {}
+    self.trial.trials = {
+        "Seth", "Green", "Aqua", "Blue"
+    }
 
     self:registerAct("Justice", "Begin\nthe trial.", {"kris", "susie", "ralsei"}, 40)
 end
 
 function Dummy:startJustice()
-    for _, chara in ipairs(Game.battle.party) do
-        chara:setActSprite("party/"..string.lower(chara.chara:getName()).."/dark/lawyer", 0, 0, 0, false)
-        local y = 0
-        if chara.chara:getName() == "Kris" then
-            y = 17
-        elseif chara.chara:getName() == "Susie" then
-            y = 18
-        elseif chara.chara:getName() == "Ralsei" then
-            y = 23
-        end
-        -- (podium shouldn't have afterimage)
-        local podium = Sprite("ui/battle/evidence/trial_podium_"..(chara.chara:getName() == "Ralsei" and 2 or 1), 16, y)
-        chara:addChild(podium)
-        table.insert(self.podiums, podium)
-    end
-    Chapter5Lib.trial_count = Chapter5Lib.trial_count + 1
+    self.trial:start()
 
     Game.battle:battleText("* You began the trial!", function()
-        if Chapter5Lib.trial_count == 1 then
+        if self.trial.trial_count == 1 then
             local victum = Game.battle:addChild(Character("starwalker", self.x - 50, self.y + 50))
-            self:createBubble("State yer case, victum!", self.x - 25, self.y - 50, "right", function()
+            self.trial:createBubble("State yer case, victum!", self.x - 25, self.y - 50, "piss", function()
 
-                self:createBubble("I was crushed flat[wait:3]\nwithout permission.", self.x - 75, self.y + 25, "right", function()
-                    self:createBubble("It's cool though.", self.x - 75, self.y + 25, "right", function()
-                        self:createBubble("COOL AND ILLEGAL!!![wait:3]\nWhat criminells could\ndo such a crime!![wait:1]\nFind 'em!!", self.x - 25, self.y - 50, "right", function()
-                            Chapter5Lib.case_desc = "Case 1: A Floradinn was\ncrushed flat!"
-                            self:startChoosing()
+                self.trial:createBubble("I was crushed flat[wait:3]\nwithout permission.", self.x - 75, self.y + 25, "right", function()
+                    self.trial:createBubble("It's cool though.", self.x - 75, self.y + 25, "right", function()
+                        self.trial:createBubble("COOL AND ILLEGAL!!![wait:3]\nWhat criminells could\ndo such a crime!![wait:1]\nFind 'em!!", self.x - 25, self.y - 50, "right", function()
+                            self.trial.case_desc = "Case 1: A Floradinn was\ncrushed flat!"
+                            self.trial:startChoosing()
                             victum:remove()
                         end)
                     end)
                 end)
             end)
-        elseif Chapter5Lib.trial_count == 2 then
-
-        elseif Chapter5Lib.trial_count == 3 then
-
+        elseif self.trial.trial_count == 2 then
+            self.trial:startChoosing()
+        elseif self.trial.trial_count == 3 then
+            self.trial:startChoosing()
+        elseif self.trial.trial_count == 4 then
+            self.trial:startChoosing()
         end
 
         return true
     end)
 end
 
-function Dummy:createBubble(text, x, y, direction, fun)
-    local bubble = SpeechBubble(text, x, y, {}, nil)
-    Game.battle:addChild(bubble)
-    self.bubble = bubble
-    self:onBubbleSpawn(bubble)
-    bubble:setCallback(function()
-        self:onBubbleRemove(bubble)
-        bubble:remove()
-        self.bubble = nil
-        if fun ~= nil then
-            fun()
+function Dummy:getResponse(perpdata, perpname, guilty, evidence, fun)
+    local cx, cy = perpdata.actor.x + (perpdata.actor.width / 2), perpdata.anchor_y - (perpdata.actor.height * 2.75)
+
+    if perpname == "Aqua" then
+        Chapter5Lib.logger:info("aqua")
+        fun(false)
+    elseif perpname == "Seth" then
+        if guilty and evidence == "PerpBook" then
+
+            Assets.playSound("damage")
+            -- Game.fader:fadeOut(nil, {speed = 0.1/30, color = {1, 1, 1}})
+            -- Game.fader:fadeIn(nil, {speed = 22.5/30})
+
+            Game.battle.timer:after(45/30, function()
+                self.trial:createBubble("Nnnrgh..[wait:1]. what's...\nwhat's your proof!?", cx, cy, {direction = "down"}, function()
+                    self.trial:createBubble("Seth..[wait:2] may we see\nthe inside of\nyour book?", cx, cy, {direction = "down"}, function()
+                        self.trial:createBubble("..[wait:1]. aren't there some\nflower petals pressed\ninside there?", cx, cy, {direction = "down"}, function()
+                            self.trial:createBubble("..[wait:1]. I...", cx, cy, {direction = "down"}, function()
+                                self.trial:createBubble("I admit it!!", cx, cy, {direction = "down"}, function()
+                                    self.trial:createBubble("I wanted to try\npressing flowers!!\nI heard it was\nscientific!!", cx, cy, {direction = "down"}, function()
+                                        self.trial:createBubble("Great work[wait:1], Blue!!", cx, cy, {direction = "down"}, function()
+                                            self.trial:createBubble("Well[wait:1], you folks proved&one crime not yours.\nBut what about the rest!?", cx, cy, {direction = "down"}, function()
+                                                fun(true)
+                                            end)
+                                        end)
+                                    end)
+                                end)
+                            end)
+                        end)
+                    end)
+                end)
+            end)
+
+        elseif guilty and evidence == "TrainPlan" then
+            self.trial:createBubble("A train!?\nYou think I used a TRAIN!?", cx, cy, {direction = "down"}, function()
+                self.trial:createBubble("What kind of scientific\nknowledge could be\ngleaned from...", cx, cy, {direction = "down"}, function()
+                    self.trial:createBubble("... I mean, uh,\nr-right to remain\nsilent!", cx, cy, {direction = "down"}, function()
+                        fun(false)
+                    end)
+                end)
+            end)
+        elseif guilty and evidence ~= "PerpBook" then
+            Chapter5Lib.logger:info("seth + other")
+            fun(false)
+        elseif not guilty then
+            Chapter5Lib.logger:info("not seth + other")
+            fun(false)
+        else
+            Chapter5Lib.logger:info("seth + other???")
+            fun(false)
         end
-    end)
-    return bubble
+    elseif perpname == "Green" then
+        fun(false)
+    elseif perpname == "Yellow" then
+        fun(false)
+    elseif perpname == "Blue" then
+        fun(false)
+    else
+        fun(false)
+    end
 end
 
-function Dummy:startChoosing()
-    -- choosy choosy
-    Chapter5Lib.selection = 1
-    Chapter5Lib.selection_max = #Chapter5Lib.trial_perps
-    for _, p in ipairs(Chapter5Lib.trial_perps) do
-        if p.actor ~= nil then
-            p.actor:setPosition(-1000, -1000)
+function Dummy:hoverPerpetrators()
+    for _, perp in ipairs(self.trial.trial_perps) do
+        if perp.actor.name == "Aqua" then
+
+        elseif perp.actor.name == "Seth" then
+
+        elseif perp.actor.name == "Green" then
+
+        elseif perp.actor.name == "Yellow" then
+
+        elseif perp.actor.name == "Blue" then
+
         end
     end
-    Game.battle:setSubState("JUSTICEACCUSE")
 end
 
-function Dummy:getEnemyDialogue()
-    for _, p in ipairs(self.podiums) do
-        p:remove()
+function Dummy:resetPerpetrators()
+    for _, perp in ipairs(self.trial.trial_perps) do
+        if perp.actor.name == "Aqua" then
+            
+        elseif perp.actor.name == "Seth" then
+
+        elseif perp.actor.name == "Green" then
+
+        elseif perp.actor.name == "Yellow" then
+
+        elseif perp.actor.name == "Blue" then
+
+        end
     end
-    return super.getEnemyDialogue(self)
 end
 
 function Dummy:onAct(battler, name)
     if name == "Justice" then
-        -- idk 
         self:startJustice()
     end
 
