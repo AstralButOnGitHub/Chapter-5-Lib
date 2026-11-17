@@ -69,7 +69,13 @@ function Dummy:init()
     }
     self.trial.trial_perps = {
         {
-            actor = Game.battle:addChild(Character("aqua", -1000, -1000)),
+            character = Game.battle:addChild(Character("aqua", -1000, -1000)),
+            hover_message_offsets = {
+                {4, 1},
+                {8, 0},
+                {8, 0},
+                {8, 0}
+            },
             hover_messages = {
                 "Hee hee!\nI did it!\nI did it!",
                 "Hee hee!\nBurn, burn!",
@@ -79,7 +85,13 @@ function Dummy:init()
             testimony_y = 0
         },
         {
-            actor = Game.battle:addChild(Character("seth", -1000, -1000)),
+            hover_message_offsets = {
+                {-1, 1},
+                {-1, 1},
+                {-1, 1},
+                {-1, 1}
+            },
+            character = Game.battle:addChild(Character("seth", -1000, -1000)),
             hover_messages = {
                 "Me?![wait:2] I was just...[wait:2]\nreading a book! Ha!",
                 "I was reading a\nbook by lamplight!",
@@ -89,7 +101,7 @@ function Dummy:init()
             testimony_y = 0
         },
         {
-            actor = Game.battle:addChild(Character("green", -1000, -1000)),
+            character = Game.battle:addChild(Character("green", -1000, -1000)),
             hover_messages = {
                 "",
                 "",
@@ -99,7 +111,13 @@ function Dummy:init()
             testimony_y = 0
         },
         {
-            actor = Game.battle:addChild(Character("yellow", -1000, -1000)),
+            hover_message_offsets = {
+                {8, 0},
+                {8, 0},
+                {8, 0},
+                {8, 0},
+            },
+            character = Game.battle:addChild(Character("yellow", -1000, -1000)),
             hover_messages = {
                 "Ain't nothing under\nmy boot.",
                 "Who's the liar!?",
@@ -109,7 +127,13 @@ function Dummy:init()
             testimony_y = 0
         },
         {
-            actor = Game.battle:addChild(Character("blue", -1000, -1000)),
+            hover_message_offsets = {
+                {8, 0},
+                {8, 0},
+                {8, 0},
+                {8, 0},
+            },
+            character = Game.battle:addChild(Character("blue", -1000, -1000)),
             hover_messages = {
                 "Perhaps it was\nto preserve it?",
                 "Was it on purpose?",
@@ -157,7 +181,7 @@ function Dummy:startJustice()
 end
 
 function Dummy:getResponse(perpdata, perpname, guilty, evidence, fun)
-    local cx, cy = perpdata.actor.x + (perpdata.actor.width / 2), perpdata.anchor_y - (perpdata.actor.height * 2.75)
+    local cx, cy = perpdata.character.x + (perpdata.character.width / 2), perpdata.anchor_y - (perpdata.character.height * 2.75)
 
     if perpname == "Aqua" then
         Chapter5Lib.logger:info("aqua")
@@ -218,34 +242,57 @@ function Dummy:getResponse(perpdata, perpname, guilty, evidence, fun)
     end
 end
 
-function Dummy:hoverPerpetrators()
+function Dummy:hoverPerpetrators(timer)
+    -- Chapter5Lib.logger:info(timer)
     for _, perp in ipairs(self.trial.trial_perps) do
-        if perp.actor.name == "Aqua" then
+        local name = perp.character.actor.name or perp.character.name
+        local shouldShow = self.trial:isGuilty(perp) and self.trial:getSelectedPerp() == perp
 
-        elseif perp.actor.name == "Seth" then
+        if name == "Aqua" then
+            if self.trial:getSelectedPerp() == perp then
+                perp.character.sprite:setAnimation("sleevewave")
+                perp.character.sprite:play(1/3, true)
 
-        elseif perp.actor.name == "Green" then
+                if (timer % 10) == 0 then
+                    perp.character.flip_x = not perp.character.flip_x
+                end
 
-        elseif perp.actor.name == "Yellow" then
-
-        elseif perp.actor.name == "Blue" then
-
-        end
-    end
-end
-
-function Dummy:resetPerpetrators()
-    for _, perp in ipairs(self.trial.trial_perps) do
-        if perp.actor.name == "Aqua" then
-            
-        elseif perp.actor.name == "Seth" then
-
-        elseif perp.actor.name == "Green" then
-
-        elseif perp.actor.name == "Yellow" then
-
-        elseif perp.actor.name == "Blue" then
-
+                if (perp.character.flip_x) then
+                    perp.character.x = perp.anchor_x - 9
+                else
+                    perp.character.x = perp.anchor_x - 12.5
+                end
+            else
+                perp.character.flip_x = false
+                perp.character.x = perp.anchor_x
+                perp.character:setSprite("walk/down_1")
+            end
+        elseif name == "Seth" then
+            if shouldShow then
+                perp.character:setSprite("nervous")
+                perp.character:play(1/3, true)
+            else
+                perp.character:setSprite("walk/down")
+                perp.character:play(1/3, true)
+            end
+        elseif name == "Green" then
+            if shouldShow then
+                perp.character:setSprite("walk/down_1")
+            else
+                perp.character:setSprite("walk/down_1")
+            end
+        elseif name == "Yellow" then
+            if shouldShow then
+                perp.character:setSprite("walk/down_1")
+            else
+                perp.character:setSprite("walk/down_1")
+            end
+        elseif name == "Blue" then
+            if shouldShow then
+                perp.character:setSprite("pose_3")
+            else
+                perp.character:setSprite("pose_3")
+            end
         end
     end
 end

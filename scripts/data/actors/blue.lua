@@ -10,8 +10,8 @@ function actor:init()
 
     self.flip = nil
 
-    self.path = "npcs/blue/pose_3"
-    self.default = ""
+    self.path = "npcs/blue"
+    self.default = "pose_3"
 
     self.voice = nil
     self.portrait_path = nil

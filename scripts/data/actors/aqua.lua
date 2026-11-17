@@ -10,8 +10,8 @@ function actor:init()
 
     self.flip = nil
 
-    self.path = "npcs/aqua/walk/down_1"
-    self.default = ""
+    self.path = "npcs/aqua"
+    self.default = "walk/down_1"
 
     self.voice = nil
     self.portrait_path = nil
@@ -21,7 +21,9 @@ function actor:init()
 
     self.talk_sprites = {}
 
-    self.animations = {}
+    self.animations = {
+        ["sleevewave"] = { "sleevewave", 1/3, true },
+    }
 
     self.offsets = {}
 end

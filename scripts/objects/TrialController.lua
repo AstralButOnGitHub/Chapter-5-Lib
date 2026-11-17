@@ -15,9 +15,14 @@ function TrialController:init(battler)
     self.choose_music = "mus_date_tense"
     self.reveal_music = "mus_date_fight"
     self.selected_perp = 1
-    self.selected_evid = 1
+    self.selected_evid = 0
     self.selected_perp_max = #self.trial_perps
     self.selected_evid_max = #self.trial_evidence
+
+    -- kris random costume thing
+    self.outfit = false
+
+    self.timer = 0
 end
 
 function TrialController:update()
@@ -25,18 +30,20 @@ function TrialController:update()
 
     if Game.battle:getSubState() == "JUSTICEREVEAL" then
         for a, perp in ipairs(self.trial_perps) do
-            if perp.actor ~= nil then
-                perp.actor:setLayer(9000)
-                perp.actor.y = self.selected_perp == a and perp.testimony_y or perp.anchor_y
+            if perp.character ~= nil then
+                perp.character:setLayer(9000)
+                perp.character.y = self.selected_perp == a and perp.testimony_y or perp.anchor_y
             end
         end
     end
     if Game.battle.state == "BATTLETEXT" and (Game.battle:getSubState() == "JUSTICEACCUSE" or Game.battle:getSubState() == "JUSTICEEVIDENCE") then
         local preperp = self.selected_perp
         local preevid = self.selected_evid
+        self.timer = self.timer + 1
+        self.battler:hoverPerpetrators(self.timer)
 
         for a, perp in ipairs(self.trial_perps) do
-            if perp.actor ~= nil then
+            if perp.character ~= nil then
                 if self.selected_perp ~= a then
                     if perp.bubble ~= nil then
                         perp.bubble:remove()
@@ -44,15 +51,15 @@ function TrialController:update()
                     perp.bubble = nil
                 end
                 if self.selected_perp == a and perp.bubble == nil and perp.hover_messages[self.trial_count] ~= "" then
-                    perp.bubble = self:createBubble(perp.hover_messages[self.trial_count], perp.actor.x + (perp.actor.width / 2), perp.anchor_y - (perp.actor.height * 2.75), {direction = "down"}, nil, false)
+                    perp.bubble = self:createBubble(perp.hover_messages[self.trial_count], perp.character.x + (perp.character.width / 2) + perp.hover_message_offsets[self.trial_count][1], perp.anchor_y - (perp.character.height * 2.75) + perp.hover_message_offsets[self.trial_count][2], {direction = "down"}, nil, false)
                 end
 
                 if self.selected_perp == a then
-                    perp.actor:setLayer(9000)
-                    perp.actor.y = MathUtils.approach(perp.actor.y, perp.testimony_y, math.abs(perp.actor.y - perp.testimony_y) * 0.15)
+                    perp.character:setLayer(9000)
+                    perp.character.y = MathUtils.approach(perp.character.y, perp.testimony_y, math.abs(perp.character.y - perp.testimony_y) * 0.15)
                 else
-                    perp.actor:setLayer(50)
-                    perp.actor.y = MathUtils.approach(perp.actor.y, perp.anchor_y, math.abs(perp.actor.y - perp.anchor_y) * 0.5)
+                    perp.character:setLayer(50)
+                    perp.character.y = MathUtils.approach(perp.character.y, perp.anchor_y, math.abs(perp.character.y - perp.anchor_y) * 0.5)
                 end
             end
         end
@@ -60,21 +67,26 @@ function TrialController:update()
         if (Input.keyPressed("left", false)) then
             if Game.battle:getSubState() == "JUSTICEEVIDENCE" then
                 preevid = self.selected_evid - 1
+                self.timer = 0
             else
                 preperp = self.selected_perp - 1
+                self.timer = 0
             end
         end
         if (Input.keyPressed("right", false)) then
             if Game.battle:getSubState() == "JUSTICEEVIDENCE" then
                 preevid = self.selected_evid + 1
+                self.timer = 0
             else
                 preperp = self.selected_perp + 1
+                self.timer = 0
             end
         end
         if (Input.keyPressed("z", false)) then
             if Game.battle:getSubState() == "JUSTICEEVIDENCE" then
                 self:startResponse()
             elseif Game.battle:getSubState() == "JUSTICEACCUSE" then
+                self.selected_evid = 1
                 Game.battle:setSubState("JUSTICEEVIDENCE")
             end
         end
@@ -84,21 +96,23 @@ function TrialController:update()
             end
         end
 
-        if preevid < 1 then
-            preevid = 1
+        if Game.battle:getSubState() == "JUSTICEEVIDENCE" then
+            if preevid < 1 then
+                preevid = 1
+            end
+            if preevid > self.selected_evid_max then
+                preevid = self.selected_evid_max
+            end
+            self.selected_evid = preevid
+        else
+            if preperp < 1 then
+                preperp = self.selected_perp_max
+            end
+            if preperp > self.selected_perp_max then
+                preperp = 1
+            end
+            self.selected_perp = preperp
         end
-        if preevid > self.selected_evid_max then
-            preevid = self.selected_evid_max
-        end
-        self.selected_evid = preevid
-
-        if preperp < 1 then
-            preperp = self.selected_perp_max
-        end
-        if preperp > self.selected_perp_max then
-            preperp = 1
-        end
-        self.selected_perp = preperp
     end
 end
 
@@ -115,7 +129,16 @@ function TrialController:start()
         p:remove()
     end
     for _, chara in ipairs(Game.battle.party) do
-        chara:setActSprite("party/"..string.lower(chara.chara:getName()).."/dark/lawyer", 0, 0, 0, false)
+        if chara.actor:getName() == "Kris" then
+            if (self.outfit) then
+                chara:setActSprite("party/kris/dark/lawyer_alt", 0, 0, 0, false)
+            else
+                chara:setActSprite("party/kris/dark/lawyer", 0, 0, 0, false)
+            end
+            self.outfit = not self.outfit
+        else
+            chara:setActSprite("party/"..string.lower(chara.chara:getName()).."/dark/lawyer", 0, 0, 0, false)
+        end
         local y = 0
         if chara.chara:getName() == "Kris" then
             y = 17
@@ -132,7 +155,7 @@ function TrialController:start()
 
     for _, perp in ipairs(self.trial_perps) do
         ---@type Actor
-        local actor = perp.actor
+        local actor = perp.character
 
         -- perp.original_sprite = actor.sprite
         -- perp.original_speed = actor:onSetSprite
@@ -150,8 +173,8 @@ function TrialController:finish()
         value.alpha = 1
     end
     for _, perp in ipairs(self.trial_perps) do
-        if perp.actor ~= nil then
-            perp.actor:setPosition(-1000, -1000)
+        if perp.character ~= nil then
+            perp.character:setPosition(-1000, -1000)
             if perp.bubble ~= nil then
                 perp.bubble:remove()
             end
@@ -176,10 +199,11 @@ function TrialController:showPerps()
     local trial_gap = 80
     local trial_h = (cam_h - (perp_amount * (trial_gap * 0.5))) + 100
     for a, perp in ipairs(self.trial_perps) do
-        if perp.actor ~= nil then
-            perp.actor:setPosition(trial_h + (trial_gap * (a - 1)), cam_v)
-            perp.testimony_y = perp.actor.y + 16
-            perp.anchor_y = perp.actor.y
+        if perp.character ~= nil then
+            perp.character:setPosition(trial_h + (trial_gap * (a - 1)), cam_v)
+            perp.testimony_y = perp.character.y + 16
+            perp.anchor_y = perp.character.y
+            perp.anchor_x = perp.character.x
         end
     end
 end
@@ -224,7 +248,7 @@ function TrialController:startResponse()
     end
     local perp = self.trial_perps[self.selected_perp]
 
-    self.battler:getResponse(perp, perp.actor.actor.name, (self.trials[self.trial_count] == perp.actor.actor.name), self.trial_evidence[self.selected_evid].name, function(success)
+    self.battler:getResponse(perp, perp.character.actor.name, self:isGuilty(perp), self:getSelectedEvidence().name, function(success)
         if success then
             self.trial_count = self.trial_count + 1
             self:finish()
@@ -232,6 +256,18 @@ function TrialController:startResponse()
             self:finish()
         end
     end)
+end
+
+function TrialController:isGuilty(perp)
+    return self.trials[self.trial_count] == perp.character.actor.name
+end
+
+function TrialController:getSelectedPerp()
+    return self.trial_perps[self.selected_perp]
+end
+
+function TrialController:getSelectedEvidence()
+    return self.trial_evidence[self.selected_evid]
 end
 
 return TrialController
