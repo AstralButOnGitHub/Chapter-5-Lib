@@ -38,6 +38,7 @@ function FusumaWall:init(x, y, shape, properties)
         VineCuttable
     }
     self.skip_fusuma = true
+    self.cull_distance = math.max((self.width + self.height) / 2, 260)
 end
 
 function FusumaWall:getSortPosition()
@@ -93,7 +94,7 @@ function FusumaWall:draw()
     Kristal.Shaders["White"]:send("whiteAmount", 1)
     local debugdrawn = {}
     for _, object in ipairs(Game.world.children) do
-        if object.x + object.width >= self.x - 320 and object.x <= self.x + self.width + 320 then
+        if object.x + object.width >= self.x - self.cull_distance and object.x <= self.x + self.width + self.cull_distance then
             if object.skip_fusuma ~= true then
                 local blacklisted = false
 
